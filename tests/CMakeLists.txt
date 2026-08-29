@@ -9,6 +9,7 @@ add_executable(audio_tracker_tests
     test_xm_pattern_codec.cpp
     test_xm_reader.cpp
     test_xm_writer.cpp
+    test_xm_roundtrip.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)
