@@ -13,6 +13,7 @@ add_executable(audio_tracker_tests
     test_xm_roundtrip.cpp
     test_mod_cell.cpp
     test_mod_reader.cpp
+    test_mod_writer.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)

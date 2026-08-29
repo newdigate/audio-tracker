@@ -16,6 +16,7 @@ add_library(audio_tracker STATIC
     src/xm/xm_writer.cpp
     src/mod/mod_cell.cpp
     src/mod/mod_reader.cpp
+    src/mod/mod_writer.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
