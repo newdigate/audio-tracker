@@ -2,6 +2,7 @@ add_executable(audio_tracker_tests
     test_main.cpp
     test_types.cpp
     test_stream.cpp
+    test_stream_be.cpp
     test_memory_stream.cpp
     test_file_stream.cpp
     test_model.cpp

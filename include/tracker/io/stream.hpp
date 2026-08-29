@@ -26,6 +26,9 @@ public:
     uint16_t read_u16_le();
     int16_t  read_i16_le();
     uint32_t read_u32_le();
+    uint16_t read_u16_be();
+    int16_t  read_i16_be();
+    uint32_t read_u32_be();
     std::string read_fixed_string(size_t len);
     bool skip(size_t num_bytes);
 };
@@ -43,6 +46,9 @@ public:
     void write_u16_le(uint16_t val);
     void write_i16_le(int16_t val);
     void write_u32_le(uint32_t val);
+    void write_u16_be(uint16_t val);
+    void write_i16_be(int16_t val);
+    void write_u32_be(uint32_t val);
     void write_fixed_string(const std::string& str, size_t fixed_len, char pad = ' ');
     void write_zeros(size_t count);
 };

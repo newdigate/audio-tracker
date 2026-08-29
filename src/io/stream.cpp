@@ -34,6 +34,25 @@ uint32_t InputStream::read_u32_le() {
            (static_cast<uint32_t>(b[3]) << 24);
 }
 
+uint16_t InputStream::read_u16_be() {
+    uint8_t b[2] = {0, 0};
+    read(b, 2);
+    return (static_cast<uint16_t>(b[0]) << 8) | static_cast<uint16_t>(b[1]);
+}
+
+int16_t InputStream::read_i16_be() {
+    return static_cast<int16_t>(read_u16_be());
+}
+
+uint32_t InputStream::read_u32_be() {
+    uint8_t b[4] = {0, 0, 0, 0};
+    read(b, 4);
+    return (static_cast<uint32_t>(b[0]) << 24) |
+           (static_cast<uint32_t>(b[1]) << 16) |
+           (static_cast<uint32_t>(b[2]) << 8) |
+           static_cast<uint32_t>(b[3]);
+}
+
 std::string InputStream::read_fixed_string(size_t len) {
     if (len == 0) return {};
     std::string str(len, '\0');
@@ -72,6 +91,28 @@ void OutputStream::write_u32_le(uint32_t val) {
         static_cast<uint8_t>((val >> 8) & 0xFF),
         static_cast<uint8_t>((val >> 16) & 0xFF),
         static_cast<uint8_t>((val >> 24) & 0xFF)
+    };
+    write(b, 4);
+}
+
+void OutputStream::write_u16_be(uint16_t val) {
+    uint8_t b[2] = {
+        static_cast<uint8_t>((val >> 8) & 0xFF),
+        static_cast<uint8_t>(val & 0xFF)
+    };
+    write(b, 2);
+}
+
+void OutputStream::write_i16_be(int16_t val) {
+    write_u16_be(static_cast<uint16_t>(val));
+}
+
+void OutputStream::write_u32_be(uint32_t val) {
+    uint8_t b[4] = {
+        static_cast<uint8_t>((val >> 24) & 0xFF),
+        static_cast<uint8_t>((val >> 16) & 0xFF),
+        static_cast<uint8_t>((val >> 8) & 0xFF),
+        static_cast<uint8_t>(val & 0xFF)
     };
     write(b, 4);
 }
