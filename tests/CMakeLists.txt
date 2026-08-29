@@ -14,6 +14,8 @@ add_executable(audio_tracker_tests
     test_mod_cell.cpp
     test_mod_reader.cpp
     test_mod_writer.cpp
+    test_mod_roundtrip.cpp
+    test_cross_format.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)
