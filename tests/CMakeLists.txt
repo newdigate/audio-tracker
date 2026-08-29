@@ -4,6 +4,7 @@ add_executable(audio_tracker_tests
     test_stream.cpp
     test_memory_stream.cpp
     test_file_stream.cpp
+    test_model.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)

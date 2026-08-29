@@ -9,6 +9,7 @@ add_library(audio_tracker STATIC
     src/io/stream.cpp
     src/io/memory_stream.cpp
     src/io/file_stream.cpp
+    src/model.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
