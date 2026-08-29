@@ -7,6 +7,7 @@ add_executable(audio_tracker_tests
     test_model.cpp
     test_xm_delta.cpp
     test_xm_pattern_codec.cpp
+    test_xm_reader.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)
