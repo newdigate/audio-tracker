@@ -494,7 +494,7 @@ TEST_CASE(XmRoundTrip_FileIOFidelity) {
     s.loop_start = 0;
     s.loop_length = s.length;
 
-    const std::string tmp_filename = "/tmp/test_xm_roundtrip_file.xm";
+    const std::string tmp_filename = "test_xm_roundtrip_file.xm";
     auto save_status = tracker::xm::XmWriter::save_to_file(song, tmp_filename);
     REQUIRE(save_status.is_ok());
 
