@@ -11,6 +11,7 @@ add_library(audio_tracker STATIC
     src/io/file_stream.cpp
     src/model.cpp
     src/xm/xm_delta.cpp
+    src/xm/xm_pattern_codec.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
