@@ -18,6 +18,8 @@ static std::string trim_spaces(const std::string& str) {
     return str.substr(0, end);
 }
 
+#include <cctype>
+
 static uint16_t parse_channel_count(const std::string& tag) {
     if (tag == "M.K." || tag == "M!K!" || tag == "4CHN" || tag == "FLT4") return 4;
     if (tag == "6CHN") return 6;
@@ -26,7 +28,9 @@ static uint16_t parse_channel_count(const std::string& tag) {
     if (tag == "32CN") return 32;
 
     if (tag.size() == 4) {
-        if (tag[2] == 'C' && (tag[3] == 'H' || tag[3] == 'N')) {
+        if (tag[2] == 'C' && (tag[3] == 'H' || tag[3] == 'N') &&
+            std::isdigit(static_cast<unsigned char>(tag[0])) &&
+            std::isdigit(static_cast<unsigned char>(tag[1]))) {
             int ch = (tag[0] - '0') * 10 + (tag[1] - '0');
             if (ch > 0 && ch <= 32) return static_cast<uint16_t>(ch);
         } else if (tag[0] >= '1' && tag[0] <= '9' && tag.substr(1) == "CHN") {

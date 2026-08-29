@@ -103,14 +103,23 @@ Status ModWriter::save(const Song& song, io::OutputStream& stream) {
     for (size_t s = 0; s < MOD_NUM_SAMPLES; ++s) {
         if (s < song.instruments.size() && !song.instruments[s].samples.empty()) {
             const auto& sample = song.instruments[s].samples[0];
+            uint32_t len_bytes = (static_cast<uint32_t>(sample.length) / 2) * 2;
             if (sample.is_16bit) {
-                for (int16_t val : sample.data16) {
-                    int8_t val8 = static_cast<int8_t>(val >> 8);
+                uint32_t frames_to_write = std::min<uint32_t>(len_bytes, static_cast<uint32_t>(sample.data16.size()));
+                for (size_t i = 0; i < frames_to_write; ++i) {
+                    int8_t val8 = static_cast<int8_t>(sample.data16[i] >> 8);
                     stream.write_i8(val8);
                 }
+                for (size_t i = frames_to_write; i < len_bytes; ++i) {
+                    stream.write_i8(0);
+                }
             } else {
-                if (!sample.data8.empty()) {
-                    stream.write(sample.data8.data(), sample.data8.size());
+                size_t bytes_to_write = std::min<size_t>(len_bytes, sample.data8.size());
+                if (bytes_to_write > 0) {
+                    stream.write(sample.data8.data(), bytes_to_write);
+                }
+                for (size_t i = bytes_to_write; i < len_bytes; ++i) {
+                    stream.write_i8(0);
                 }
             }
         }
