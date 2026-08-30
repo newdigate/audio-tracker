@@ -23,6 +23,7 @@ add_executable(audio_tracker_tests
     test_cross_format.cpp
     test_it_roundtrip.cpp
     test_cross_format_it.cpp
+    test_s3m_types.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)
