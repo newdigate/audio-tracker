@@ -96,23 +96,11 @@ Status S3mWriter::save(const Song& song, io::OutputStream& stream) {
         }
     }
 
-    bool has_custom_panning = false;
-    for (size_t c = 0; c < num_channels; ++c) {
-        if (song.channel_panning[c] != 0) {
-            has_custom_panning = true;
-            break;
-        }
-    }
-
     std::array<uint8_t, 32> custom_pan_table{};
     for (size_t c = 0; c < 32; ++c) {
         if (c < num_channels) {
-            if (has_custom_panning) {
-                uint8_t pan_4bit = std::min<uint8_t>(song.channel_panning[c] / 4, 15);
-                custom_pan_table[c] = 0x20 | pan_4bit;
-            } else {
-                custom_pan_table[c] = 0x00;
-            }
+            uint8_t pan_4bit = std::min<uint8_t>(song.channel_panning[c] / 4, 15);
+            custom_pan_table[c] = 0x20 | pan_4bit;
         } else {
             custom_pan_table[c] = 0x00;
         }

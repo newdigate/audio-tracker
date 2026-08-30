@@ -76,48 +76,49 @@ Status unpack_pattern(io::InputStream& stream, Pattern& out_pat, uint16_t num_ch
 
 Status pack_pattern(const Pattern& pat, io::OutputStream& stream) {
     uint16_t channels_to_pack = std::min<uint16_t>(pat.num_channels, static_cast<uint16_t>(S3M_MAX_CHANNELS));
-    uint16_t rows_to_pack = pat.num_rows;
 
-    for (uint16_t row = 0; row < rows_to_pack; ++row) {
-        for (uint16_t ch = 0; ch < channels_to_pack; ++ch) {
-            const Cell& cell = pat.get_cell(row, ch);
-            if (cell.is_empty()) {
-                continue;
-            }
+    for (uint16_t row = 0; row < S3M_ROWS_PER_PATTERN; ++row) {
+        if (row < pat.num_rows) {
+            for (uint16_t ch = 0; ch < channels_to_pack; ++ch) {
+                const Cell& cell = pat.get_cell(row, ch);
+                if (cell.is_empty()) {
+                    continue;
+                }
 
-            uint8_t ctrl = static_cast<uint8_t>(ch & S3M_PACK_CHANNEL_MASK);
-            bool has_note_inst = (cell.note != 0 || cell.instrument != 0);
-            bool has_volume = (cell.volume != 0);
-            bool has_effect = (cell.effect_type != 0 || cell.effect_param != 0);
+                uint8_t ctrl = static_cast<uint8_t>(ch & S3M_PACK_CHANNEL_MASK);
+                bool has_note_inst = (cell.note != 0 || cell.instrument != 0);
+                bool has_volume = (cell.volume != 0);
+                bool has_effect = (cell.effect_type != 0 || cell.effect_param != 0);
 
-            if (!has_note_inst && !has_volume && !has_effect) {
-                continue;
-            }
+                if (!has_note_inst && !has_volume && !has_effect) {
+                    continue;
+                }
 
-            if (has_note_inst) {
-                ctrl |= S3M_PACK_NOTE_INST;
-            }
-            if (has_volume) {
-                ctrl |= S3M_PACK_VOLUME;
-            }
-            if (has_effect) {
-                ctrl |= S3M_PACK_EFFECT;
-            }
+                if (has_note_inst) {
+                    ctrl |= S3M_PACK_NOTE_INST;
+                }
+                if (has_volume) {
+                    ctrl |= S3M_PACK_VOLUME;
+                }
+                if (has_effect) {
+                    ctrl |= S3M_PACK_EFFECT;
+                }
 
-            stream.write_u8(ctrl);
+                stream.write_u8(ctrl);
 
-            if (has_note_inst) {
-                stream.write_u8(note_to_s3m_byte(cell.note));
-                stream.write_u8(cell.instrument);
-            }
+                if (has_note_inst) {
+                    stream.write_u8(note_to_s3m_byte(cell.note));
+                    stream.write_u8(cell.instrument);
+                }
 
-            if (has_volume) {
-                stream.write_u8(cell.volume);
-            }
+                if (has_volume) {
+                    stream.write_u8(cell.volume);
+                }
 
-            if (has_effect) {
-                stream.write_u8(cell.effect_type);
-                stream.write_u8(cell.effect_param);
+                if (has_effect) {
+                    stream.write_u8(cell.effect_type);
+                    stream.write_u8(cell.effect_param);
+                }
             }
         }
 
