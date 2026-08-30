@@ -3,6 +3,8 @@
 #include <tracker/xm/xm_reader.hpp>
 #include <tracker/mod/mod_writer.hpp>
 #include <tracker/mod/mod_reader.hpp>
+#include <tracker/it/it_writer.hpp>
+#include <tracker/it/it_reader.hpp>
 #include <cstdio>
 #include <vector>
 #include <string>
@@ -344,3 +346,46 @@ TEST_CASE(CrossFormat_FileRoundTrips) {
     REQUIRE_EQ(mod_song.patterns[0].get_cell(0, 0).instrument, 1);
     REQUIRE_EQ(mod_song.instruments[0].samples[0].data8.size(), 8);
 }
+
+TEST_CASE(CrossFormat_ItToXmToIt) {
+    tracker::Song orig;
+    orig.name = "IT-XM-IT";
+    orig.num_channels = 4;
+    orig.order_table = {0};
+    orig.patterns.emplace_back(64, 4);
+    orig.patterns[0].get_cell(0, 0).note = 49;
+    orig.patterns[0].get_cell(0, 0).instrument = 1;
+
+    tracker::Instrument inst;
+    inst.name = "CrossInst";
+    tracker::Sample s;
+    s.name = "CrossSmp";
+    s.data8 = {10, 20, 30, 20, 10, 0, -10, -20};
+    s.length = 8;
+    s.volume = 64;
+    inst.samples.push_back(std::move(s));
+    orig.instruments.push_back(std::move(inst));
+
+    // Save to IT
+    auto it_res = tracker::it::ItWriter::save_to_memory(orig);
+    REQUIRE(it_res.is_ok());
+
+    // Load IT -> Save to XM
+    auto it_song = tracker::it::ItReader::load_from_memory(it_res.value().data(), it_res.value().size()).value();
+    auto xm_res = tracker::xm::XmWriter::save_to_memory(it_song);
+    REQUIRE(xm_res.is_ok());
+
+    // Load XM -> Save to IT
+    auto xm_song = tracker::xm::XmReader::load_from_memory(xm_res.value().data(), xm_res.value().size()).value();
+    auto it_res2 = tracker::it::ItWriter::save_to_memory(xm_song);
+    REQUIRE(it_res2.is_ok());
+
+    // Final load from IT
+    auto final_song = tracker::it::ItReader::load_from_memory(it_res2.value().data(), it_res2.value().size()).value();
+    REQUIRE_EQ(final_song.name, "IT-XM-IT");
+    REQUIRE_EQ(final_song.num_channels, 4);
+    REQUIRE_EQ(final_song.patterns[0].get_cell(0, 0).note, 49);
+    REQUIRE_EQ(final_song.patterns[0].get_cell(0, 0).instrument, 1);
+    REQUIRE_EQ(final_song.instruments[0].samples[0].data8.size(), 8);
+}
+

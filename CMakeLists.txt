@@ -20,6 +20,7 @@ add_library(audio_tracker STATIC
     src/it/it_compression.cpp
     src/it/it_pattern_codec.cpp
     src/it/it_reader.cpp
+    src/it/it_writer.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
