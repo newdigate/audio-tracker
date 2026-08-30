@@ -6,6 +6,7 @@ add_executable(audio_tracker_tests
     test_memory_stream.cpp
     test_file_stream.cpp
     test_model.cpp
+    test_it_model.cpp
     test_xm_delta.cpp
     test_xm_pattern_codec.cpp
     test_xm_reader.cpp
