@@ -27,6 +27,8 @@ add_executable(audio_tracker_tests
     test_s3m_pattern_codec.cpp
     test_s3m_reader.cpp
     test_s3m_writer.cpp
+    test_s3m_roundtrip.cpp
+    test_cross_format_s3m.cpp
 )
 
 target_link_libraries(audio_tracker_tests PRIVATE audio_tracker)
