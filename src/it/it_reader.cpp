@@ -367,7 +367,7 @@ Result<Song> ItReader::load(io::InputStream& stream) {
             for (uint8_t s_idx : used_samples) {
                 inst.samples.push_back(global_samples[s_idx - 1]);
             }
-            if (inst.samples.empty() && i < global_samples.size()) {
+            if (inst.samples.empty() && num_samples_inst > 0 && i < global_samples.size()) {
                 inst.samples.push_back(global_samples[i]);
             }
 

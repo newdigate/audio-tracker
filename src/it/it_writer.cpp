@@ -132,9 +132,17 @@ Status ItWriter::save(const Song& song, io::OutputStream& stream) {
     stream.write_u32_le(0); // reserved
 
     // Channel panning (64 bytes)
+    bool has_custom_panning = false;
+    for (size_t c = 0; c < num_channels; ++c) {
+        if (song.channel_panning[c] != 0) {
+            has_custom_panning = true;
+            break;
+        }
+    }
+
     for (size_t c = 0; c < 64; ++c) {
         if (c < num_channels) {
-            if (song.channel_panning[c] < 128 && song.channel_panning[c] != 0) {
+            if (has_custom_panning) {
                 stream.write_u8(song.channel_panning[c]);
             } else {
                 stream.write_u8(32); // Default center pan for active channel
@@ -145,8 +153,16 @@ Status ItWriter::save(const Song& song, io::OutputStream& stream) {
     }
 
     // Channel volume (64 bytes)
-    for (size_t c = 0; c < 64; ++c) {
+    bool has_custom_volume = false;
+    for (size_t c = 0; c < num_channels; ++c) {
         if (song.channel_volume[c] != 0) {
+            has_custom_volume = true;
+            break;
+        }
+    }
+
+    for (size_t c = 0; c < 64; ++c) {
+        if (has_custom_volume && c < num_channels) {
             stream.write_u8(song.channel_volume[c]);
         } else {
             stream.write_u8(64);
