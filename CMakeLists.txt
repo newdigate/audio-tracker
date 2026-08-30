@@ -17,6 +17,7 @@ add_library(audio_tracker STATIC
     src/mod/mod_cell.cpp
     src/mod/mod_reader.cpp
     src/mod/mod_writer.cpp
+    src/it/it_compression.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
