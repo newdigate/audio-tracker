@@ -24,6 +24,7 @@ add_library(audio_tracker STATIC
     src/s3m/s3m_types.cpp
     src/s3m/s3m_pattern_codec.cpp
     src/s3m/s3m_reader.cpp
+    src/s3m/s3m_writer.cpp
 )
 
 target_include_directories(audio_tracker PUBLIC
